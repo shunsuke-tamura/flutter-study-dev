@@ -14,85 +14,77 @@ class MyApp extends StatelessWidget {
         body: Column(
           children: <Widget>[
             Container(
-              width: double.infinity,
-              height: 60,
-              color: Colors.grey[200],
-              child: Row(
-                // 横に並べる
-                children: <Widget>[
-                  Container(color: Colors.red, child: const Text('first')),
-                  Container(color: Colors.blue, child: const Text('second')),
-                  Container(color: Colors.green, child: const Text('third')),
-                ],
-              ),
+              padding: const EdgeInsets.only(top: 32),
+              child: const Text('TextButton'),
             ),
-            SizedBox(
-              // colorを指定しない時はSizeBoxでOKらしい
-              width: double.infinity,
-              height: 60,
-              child: Row(
-                // 中央寄せ
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(color: Colors.red, child: const Text('***')),
-                  Container(color: Colors.blue, child: const Text('中央寄せ')),
-                  Container(color: Colors.green, child: const Text('---')),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                const TextButton(
+                  onPressed: null,
+                  child: Text('disabled'),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('enabled'),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
+                  onPressed: () {},
+                  child: const Text('enabled'),
+                ),
+              ],
             ),
             Container(
-              width: double.infinity,
-              height: 60,
-              color: Colors.grey[200],
-              child: Row(
-                // 右寄せ
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(color: Colors.red, child: const Text('***')),
-                  Container(color: Colors.blue, child: const Text('右寄せ')),
-                  Container(color: Colors.green, child: const Text('---')),
-                ],
-              ),
+              padding: const EdgeInsets.only(top: 32),
+              child: const Text('OutlinedButton'),
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: Row(
-                // 均等配置
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(color: Colors.red, child: const Text('***')),
-                  Container(color: Colors.blue, child: const Text('均等配置')),
-                  Container(color: Colors.green, child: const Text('---')),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                const OutlinedButton(
+                  onPressed: null,
+                  child: Text('disabled'),
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+                  child: const Text('enabled'),
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
+                  child: const Text('enabled'),
+                ),
+              ],
             ),
             Container(
-              width: double.infinity,
-              height: 60,
-              color: Colors.grey[200],
-              child: Row(
-                // 上寄せ
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(color: Colors.red, child: const Text('***')),
-                  Container(color: Colors.blue, child: const Text('上寄せ')),
-                  Container(color: Colors.green, child: const Text('---')),
-                ],
-              ),
+              padding: const EdgeInsets.only(top: 32),
+              child: const Text('ElevatedButton'),
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: Row(
-                // 下寄せ
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Container(color: Colors.red, child: const Text('***')),
-                  Container(color: Colors.blue, child: const Text('下寄せ')),
-                  Container(color: Colors.green, child: const Text('---')),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                const ElevatedButton(
+                  onPressed: null,
+                  child: Text('disabled'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('enabled'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 16,
+                  ),
+                  child: const Text('enabled'),
+                ),
+              ],
             ),
           ],
         ),
