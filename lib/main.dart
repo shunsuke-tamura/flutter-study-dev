@@ -11,6 +11,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
         body: Column(
           children: <Widget>[
             Container(
@@ -83,6 +88,53 @@ class MyApp extends StatelessWidget {
                     elevation: 16,
                   ),
                   child: const Text('enabled'),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 32),
+              child: const Text('IconButton'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.thumb_up),
+                ),
+                IconButton(
+                  color: Colors.pink,
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite),
+                ),
+                IconButton(
+                  iconSize: 64,
+                  onPressed: () {},
+                  icon: const Icon(Icons.flight),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 32),
+              child: const Text('アイコン＋テキスト'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.thumb_up),
+                  label: const Text('Good'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.favorite, color: Colors.pink),
+                  label: const Text('Like'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.flight),
+                  label: const Text('Flight'),
                 ),
               ],
             ),
