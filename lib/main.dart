@@ -11,25 +11,48 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          // 左側のアイコン
-          leading: const Icon(Icons.arrow_back),
-          // タイトルテキスト
-          title: const Text('Hello'),
-          // 右側のアイコン一覧
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.favorite),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
-            ),
-          ],
+      home: const Scaffold(
+        body: Center(
+          child: MyWidget(),
         ),
       ),
+    );
+  }
+}
+
+// StatefulWidgetを継承するとStateを扱える
+// このWidgetを表示すると、Stateを元にUIが作成される
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  // 使用するStateを指定
+  @override
+  MyWidgetState createState() => MyWidgetState();
+}
+
+// Stateを継承して使う
+class MyWidgetState extends State<MyWidget> {
+  // データを宣言
+  int count = 0;
+
+  // データを元にWidgetを作る
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(count.toString()),
+        TextButton(
+          onPressed: () {
+            // データを更新する時は setState を呼ぶ
+            setState(() {
+              // データを更新
+              count = count + 1;
+            });
+          },
+          child: const Text('カウントアップ'),
+        ),
+      ],
     );
   }
 }
