@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final List<Map<String, dynamic>> listItems = [
+    {
+      'text': 'Item 1',
+      'color': Colors.blue[600],
+    },
+    {
+      'text': 'Item 2',
+      'color': Colors.blue[300],
+    },
+    {
+      'text': 'Item 3',
+      'color': Colors.blue[100],
+    },
+  ];
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,132 +26,88 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.green,
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
         body: Column(
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.only(top: 32),
-              child: const Text('TextButton'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                const TextButton(
-                  onPressed: null,
-                  child: Text('disabled'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('enabled'),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.red,
+              height: 125,
+              padding: const EdgeInsets.all(4),
+              // childrenを指定してリスト表示
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                    height: 50,
+                    color: Colors.blue[600],
+                    child: const Text('Item 1'),
                   ),
-                  onPressed: () {},
-                  child: const Text('enabled'),
-                ),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.only(top: 32),
-              child: const Text('OutlinedButton'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                const OutlinedButton(
-                  onPressed: null,
-                  child: Text('disabled'),
-                ),
-                OutlinedButton(
-                  onPressed: () {},
-                  child: const Text('enabled'),
-                ),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.red,
+                  Container(
+                    height: 50,
+                    color: Colors.blue[300],
+                    child: const Text('Item 2'),
                   ),
-                  child: const Text('enabled'),
-                ),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.only(top: 32),
-              child: const Text('ElevatedButton'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                const ElevatedButton(
-                  onPressed: null,
-                  child: Text('disabled'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('enabled'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    elevation: 16,
+                  Container(
+                    height: 50,
+                    color: Colors.blue[100],
+                    child: const Text('Item 3'),
                   ),
-                  child: const Text('enabled'),
-                ),
-              ],
+                ],
+              ),
             ),
             Container(
-              padding: const EdgeInsets.only(top: 32),
-              child: const Text('IconButton'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.thumb_up),
-                ),
-                IconButton(
-                  color: Colors.pink,
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite),
-                ),
-                IconButton(
-                  iconSize: 64,
-                  onPressed: () {},
-                  icon: const Icon(Icons.flight),
-                ),
-              ],
+              height: 125,
+              padding: const EdgeInsets.all(4),
+              // 配列を元にリスト表示
+              child: ListView.builder(
+                itemCount: listItems.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 50,
+                    color: listItems[index]['color'],
+                    child: Text(listItems[index]['text']),
+                  );
+                },
+              ),
             ),
             Container(
-              padding: const EdgeInsets.only(top: 32),
-              child: const Text('アイコン＋テキスト'),
+              height: 125,
+              padding: const EdgeInsets.all(4),
+              // 各アイテムの間にスペースなどを挟みたい場合
+              child: ListView.separated(
+                itemCount: listItems.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 50,
+                    color: listItems[index]['color'],
+                    child: Text(listItems[index]['text']),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider();
+                },
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.thumb_up),
-                  label: const Text('Good'),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite, color: Colors.pink),
-                  label: const Text('Like'),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.flight),
-                  label: const Text('Flight'),
-                ),
-              ],
+            // タイトル・サブタイトル・画像・アイコン等を含めたアイテムが作れる
+            ListTile(
+              leading: Image.network('https://placehold.jp/50x50.png'),
+              title: const Text('ListTile'),
+              subtitle: const Text('subtitle'),
+              trailing: const Icon(Icons.more_vert),
+            ),
+            // 影のついたカードUIが作れる
+            const Card(
+              child: SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: Text('Card'),
+              ),
+            ),
+            // 組み合わせることもOK
+            Card(
+              child: ListTile(
+                leading: Image.network('https://placehold.jp/50x50.png'),
+                title: const Text('Card and ListTile'),
+                subtitle: const Text('subtitle'),
+                trailing: const Icon(Icons.more_vert),
+              ),
             ),
           ],
         ),
