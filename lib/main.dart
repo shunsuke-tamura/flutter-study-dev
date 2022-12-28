@@ -24,8 +24,15 @@ class MyTodoApp extends StatelessWidget {
 }
 
 // リスト一覧画面用Widget
-class TodoListPage extends StatelessWidget {
+class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});
+
+  @override
+  TodoListPageState createState() => TodoListPageState();
+}
+
+class TodoListPageState extends State<TodoListPage> {
+  List<String> todos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -34,29 +41,27 @@ class TodoListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('リスト一覧'),
       ),
-      body: ListView(children: const <Widget>[
-        Card(
-            child: ListTile(
-          title: Text('リスト一覧画面'),
-        )),
-        Card(
-            child: ListTile(
-          title: Text('リスト一覧画面'),
-        )),
-        Card(
-            child: ListTile(
-          title: Text('リスト一覧画面'),
-        )),
-      ]),
+      body: ListView.builder(
+          itemCount: todos.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(title: Text(todos[index])),
+            );
+          }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           // "push"で新規画面に遷移
-          Navigator.of(context).push(
+          final String? newContent = await Navigator.of(context).push<String?>(
             MaterialPageRoute(builder: (context) {
               // 遷移先の画面としてリスト追加画面を指定
               return const TodoAddPage();
             }),
           );
+          if (newContent != null) {
+            setState(() {
+              todos.add(newContent);
+            });
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -65,8 +70,15 @@ class TodoListPage extends StatelessWidget {
 }
 
 // リスト追加画面用Widget
-class TodoAddPage extends StatelessWidget {
+class TodoAddPage extends StatefulWidget {
   const TodoAddPage({super.key});
+
+  @override
+  TodoAddPageState createState() => TodoAddPageState();
+}
+
+class TodoAddPageState extends State<TodoAddPage> {
+  String content = '';
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +91,20 @@ class TodoAddPage extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const TextField(),
+                Text(
+                  content,
+                  style: const TextStyle(color: Colors.blue),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  onChanged: (String value) {
+                    setState(() {
+                      content = value;
+                    });
+                  },
+                ),
                 const SizedBox(
                   height: 8,
                 ),
@@ -91,7 +116,7 @@ class TodoAddPage extends StatelessWidget {
                     // ボタンをクリックした時の処理
                     onPressed: () {
                       // "pop"で前の画面に戻る
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(content);
                     },
                     child: const Text('追加'),
                   ),
