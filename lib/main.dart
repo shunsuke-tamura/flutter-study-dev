@@ -1,58 +1,71 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  // 最初に表示するWidget
+  runApp(const MyTodoApp());
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyTodoApp extends StatelessWidget {
+  const MyTodoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: MyWidget(),
-        ),
+      // アプリ名
+      title: 'My Todo App',
+      theme: ThemeData(
+        // テーマカラー
+        primarySwatch: Colors.blue,
+      ),
+      // リスト一覧画面を表示
+      home: const TodoListPage(),
+    );
+  }
+}
+
+// リスト一覧画面用Widget
+class TodoListPage extends StatelessWidget {
+  const TodoListPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: const Center(
+        child: Text('リスト一覧画面'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // "push"で新規画面に遷移
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              // 遷移先の画面としてリスト追加画面を指定
+              return const TodoAddPage();
+            }),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-// StatefulWidgetを継承するとStateを扱える
-// このWidgetを表示すると、Stateを元にUIが作成される
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+// リスト追加画面用Widget
+class TodoAddPage extends StatelessWidget {
+  const TodoAddPage({super.key});
 
-  // 使用するStateを指定
-  @override
-  MyWidgetState createState() => MyWidgetState();
-}
-
-// Stateを継承して使う
-class MyWidgetState extends State<MyWidget> {
-  // データを宣言
-  int count = 0;
-
-  // データを元にWidgetを作る
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(count.toString()),
-        TextButton(
+    return Scaffold(
+      body: Center(
+        child: TextButton(
+          // ボタンをクリックした時の処理
           onPressed: () {
-            // データを更新する時は setState を呼ぶ
-            setState(() {
-              // データを更新
-              count = count + 1;
-            });
+            // "pop"で前の画面に戻る
+            Navigator.of(context).pop();
           },
-          child: const Text('カウントアップ'),
+          child: const Text('リスト追加画面（クリックで戻る）'),
         ),
-      ],
+      ),
     );
   }
 }
