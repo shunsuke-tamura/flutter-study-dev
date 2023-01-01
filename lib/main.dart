@@ -17,8 +17,7 @@ class MyTodoApp extends StatelessWidget {
         // テーマカラー
         primarySwatch: Colors.blue,
       ),
-      // リスト一覧画面を表示
-      home: const TodoListPage(),
+      home: const SignUpPage(),
     );
   }
 }
@@ -135,6 +134,68 @@ class TodoAddPageState extends State<TodoAddPage> {
                     child: const Text('キャンセル'),
                   ),
                 )
+              ]),
+        ));
+  }
+}
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
+  @override
+  SignUpPageState createState() => SignUpPageState();
+}
+
+class SignUpPageState extends State<SignUpPage> {
+  String email = '';
+  String password = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Sign Up"),
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(64),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'email'),
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(labelText: 'password(6文字以上)'),
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    child: const Text('submit'),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const TodoListPage()));
+                    },
+                  ),
+                ),
               ]),
         ));
   }
