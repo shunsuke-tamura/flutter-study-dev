@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 
 class TodoListPage extends StatefulWidget {
-  const TodoListPage({super.key});
+  final String currentEmail;
+  const TodoListPage({super.key, required this.currentEmail});
 
   @override
   TodoListPageState createState() => TodoListPageState();
@@ -17,6 +18,16 @@ class TodoListPageState extends State<TodoListPage> {
       // AppBarを表示し、タイトルも設定
       appBar: AppBar(
         title: const Text('リスト一覧'),
+        actions: [
+          Container(
+              width: 100,
+              height: double.infinity,
+              alignment: Alignment.center,
+              child: Text(
+                widget.currentEmail,
+                style: const TextStyle(fontSize: 15),
+              ))
+        ],
       ),
       body: ListView.builder(
           itemCount: todos.length,

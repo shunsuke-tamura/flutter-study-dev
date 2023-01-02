@@ -14,6 +14,7 @@ class SignUpPageState extends State<SignUpPage> {
   String email = '';
   String password = '';
   String msg = '';
+  late User user;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,9 @@ class SignUpPageState extends State<SignUpPage> {
                                 email: email,
                                 password: password,
                               );
-                              final User user = result.user!;
+                              setState(() {
+                                user = result.user!;
+                              });
                               print(user);
                             } catch (e) {
                               setState(() {
@@ -76,7 +79,9 @@ class SignUpPageState extends State<SignUpPage> {
                             }
                             if (!mounted) return;
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const TodoListPage()));
+                                builder: (context) => TodoListPage(
+                                      currentEmail: user.email!,
+                                    )));
                           },
                         )),
                     const SizedBox(
@@ -96,7 +101,9 @@ class SignUpPageState extends State<SignUpPage> {
                                 email: email,
                                 password: password,
                               );
-                              final User user = result.user!;
+                              setState(() {
+                                user = result.user!;
+                              });
                               print(user);
                             } catch (e) {
                               setState(() {
@@ -106,7 +113,9 @@ class SignUpPageState extends State<SignUpPage> {
                             }
                             if (!mounted) return;
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const TodoListPage()));
+                                builder: (context) => TodoListPage(
+                                      currentEmail: user.email!,
+                                    )));
                           },
                         )),
                   ],
