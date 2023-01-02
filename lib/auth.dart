@@ -11,6 +11,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   String email = '';
   String password = '';
   String msg = '';
@@ -20,7 +21,7 @@ class SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Sign Up"),
+          title: const Text("SignUp / SignIn"),
         ),
         body: Container(
           padding: const EdgeInsets.all(64),
@@ -61,7 +62,6 @@ class SignUpPageState extends State<SignUpPage> {
                           child: const Text('Sigin Up'),
                           onPressed: () async {
                             try {
-                              final FirebaseAuth auth = FirebaseAuth.instance;
                               final UserCredential result =
                                   await auth.createUserWithEmailAndPassword(
                                 email: email,
@@ -70,7 +70,6 @@ class SignUpPageState extends State<SignUpPage> {
                               setState(() {
                                 user = result.user!;
                               });
-                              print(user);
                             } catch (e) {
                               setState(() {
                                 msg = e.toString();
@@ -95,7 +94,6 @@ class SignUpPageState extends State<SignUpPage> {
                           child: const Text('Sigin In'),
                           onPressed: () async {
                             try {
-                              final FirebaseAuth auth = FirebaseAuth.instance;
                               final UserCredential result =
                                   await auth.signInWithEmailAndPassword(
                                 email: email,
@@ -104,7 +102,6 @@ class SignUpPageState extends State<SignUpPage> {
                               setState(() {
                                 user = result.user!;
                               });
-                              print(user);
                             } catch (e) {
                               setState(() {
                                 msg = e.toString();
