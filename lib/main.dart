@@ -1,7 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  // 最初に表示するWidget
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyTodoApp());
 }
 
@@ -149,6 +155,7 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
   String email = '';
   String password = '';
+  String msg = '';
 
   @override
   Widget build(BuildContext context) {
@@ -190,10 +197,33 @@ class SignUpPageState extends State<SignUpPage> {
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                     child: const Text('submit'),
-                    onPressed: () {
+                    onPressed: () async {
+                      try {
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        final UserCredential result =
+                            await auth.createUserWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+                        final User user = result.user!;
+                        print(user);
+                      } catch (e) {
+                        setState(() {
+                          msg = e.toString();
+                        });
+                        return;
+                      }
+                      if (!mounted) return;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const TodoListPage()));
                     },
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    msg,
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
               ]),
