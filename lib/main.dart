@@ -191,33 +191,67 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 8,
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    child: const Text('submit'),
-                    onPressed: () async {
-                      try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        final UserCredential result =
-                            await auth.createUserWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                        final User user = result.user!;
-                        print(user);
-                      } catch (e) {
-                        setState(() {
-                          msg = e.toString();
-                        });
-                        return;
-                      }
-                      if (!mounted) return;
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const TodoListPage()));
-                    },
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        width: 100,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.lightGreen),
+                          child: const Text('Sigin Up'),
+                          onPressed: () async {
+                            try {
+                              final FirebaseAuth auth = FirebaseAuth.instance;
+                              final UserCredential result =
+                                  await auth.createUserWithEmailAndPassword(
+                                email: email,
+                                password: password,
+                              );
+                              final User user = result.user!;
+                              print(user);
+                            } catch (e) {
+                              setState(() {
+                                msg = e.toString();
+                              });
+                              return;
+                            }
+                            if (!mounted) return;
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const TodoListPage()));
+                          },
+                        )),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    SizedBox(
+                        width: 100,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue),
+                          child: const Text('Sigin In'),
+                          onPressed: () async {
+                            try {
+                              final FirebaseAuth auth = FirebaseAuth.instance;
+                              final UserCredential result =
+                                  await auth.signInWithEmailAndPassword(
+                                email: email,
+                                password: password,
+                              );
+                              final User user = result.user!;
+                              print(user);
+                            } catch (e) {
+                              setState(() {
+                                msg = e.toString();
+                              });
+                              return;
+                            }
+                            if (!mounted) return;
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const TodoListPage()));
+                          },
+                        )),
+                  ],
                 ),
                 SizedBox(
                   width: double.infinity,
