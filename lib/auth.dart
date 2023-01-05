@@ -12,8 +12,8 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  String email = '';
-  String password = '';
+  String email = 'hoge@hoge.com';
+  String password = 'hogehoge';
   String msg = '';
   late User user;
 
