@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
   String email = 'hoge@hoge.com';
   String password = 'hogehoge';
   String msg = '';
@@ -77,6 +79,10 @@ class SignUpPageState extends State<SignUpPage> {
                               return;
                             }
                             if (!mounted) return;
+                            db
+                                .collection("users")
+                                .doc(user.uid)
+                                .set({"todos": []});
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => TodoListPage(
                                       currentEmail: user.email!,
