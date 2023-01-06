@@ -18,7 +18,7 @@ class TodoListPageState extends State<TodoListPage> {
 
   void fetchTdos() {
     CollectionReference collectionRef = db.collection('users');
-    DocumentReference docRef = collectionRef.doc('hoge');
+    DocumentReference docRef = collectionRef.doc(widget.currentUid);
     docRef.get().then(
       (DocumentSnapshot doc) {
         setState(() {
