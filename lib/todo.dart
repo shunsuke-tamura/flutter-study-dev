@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 class TodoListPage extends StatefulWidget {
   final String currentEmail;
-  const TodoListPage({super.key, required this.currentEmail});
+  final String currentUid;
+  const TodoListPage(
+      {super.key, required this.currentEmail, required this.currentUid});
 
   @override
   TodoListPageState createState() => TodoListPageState();
