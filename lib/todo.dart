@@ -1,4 +1,5 @@
 // リスト一覧画面用Widget
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TodoListPage extends StatefulWidget {
@@ -10,7 +11,28 @@ class TodoListPage extends StatefulWidget {
 }
 
 class TodoListPageState extends State<TodoListPage> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
   List<String> todos = [];
+
+  void fetchTdos() {
+    CollectionReference collectionRef = db.collection('users');
+    DocumentReference docRef = collectionRef.doc('hoge');
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        setState(() {
+          todos = (doc.data() as Map<String, dynamic>)['todos'].cast<String>()
+              as List<String>;
+        });
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTdos();
+  }
 
   @override
   Widget build(BuildContext context) {
