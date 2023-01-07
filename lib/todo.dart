@@ -73,6 +73,11 @@ class TodoListPageState extends State<TodoListPage> {
             setState(() {
               todos.add(newContent);
             });
+            db
+                .collection("users")
+                .doc(widget.currentUid)
+                .set({'todos': todos}).onError(
+                    (e, _) => print("Error writing document: $e"));
           }
         },
         child: const Icon(Icons.add),
