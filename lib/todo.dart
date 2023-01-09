@@ -66,7 +66,16 @@ class TodoListPageState extends State<TodoListPage> {
                   SizedBox(
                       width: 50,
                       child: IconButton(
-                          onPressed: (() => print('delete')),
+                          onPressed: (() {
+                            setState(() {
+                              todos.removeAt(index);
+                            });
+                            db
+                                .collection("users")
+                                .doc(widget.currentUid)
+                                .set({'todos': todos}).onError((e, _) =>
+                                    print("Error writing document: $e"));
+                          }),
                           icon: const Icon(Icons.delete_forever)))
                 ]);
           }),
