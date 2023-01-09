@@ -56,9 +56,19 @@ class TodoListPageState extends State<TodoListPage> {
       body: ListView.builder(
           itemCount: todos.length,
           itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(title: Text(todos[index])),
-            );
+            return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                      child: Card(
+                    child: ListTile(title: Text(todos[index])),
+                  )),
+                  SizedBox(
+                      width: 50,
+                      child: IconButton(
+                          onPressed: (() => print('delete')),
+                          icon: const Icon(Icons.delete_forever)))
+                ]);
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
