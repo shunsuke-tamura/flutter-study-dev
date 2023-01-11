@@ -1,6 +1,7 @@
 // リスト一覧画面用Widget
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_study_dev/chat.dart';
 
 class TodoListPage extends StatefulWidget {
   final String currentEmail;
@@ -60,9 +61,16 @@ class TodoListPageState extends State<TodoListPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: Card(
-                    child: ListTile(title: Text(todos[index])),
-                  )),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                    title: todos[index],
+                                    currentEmail: widget.currentEmail)));
+                          },
+                          child: Card(
+                            child: ListTile(title: Text(todos[index])),
+                          ))),
                   SizedBox(
                       width: 50,
                       child: IconButton(
