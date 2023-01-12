@@ -1,7 +1,17 @@
 // リスト一覧画面用Widget
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter_study_dev/chat.dart';
+
+class Todo {
+  final String uuid, content;
+  Todo(this.uuid, this.content);
+
+  Map<String, String> toMap() {
+    return {'uuid': uuid, 'content': content};
+  }
+}
 
 class TodoListPage extends StatefulWidget {
   final String currentEmail;
@@ -15,7 +25,7 @@ class TodoListPage extends StatefulWidget {
 
 class TodoListPageState extends State<TodoListPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<String> todos = [];
+  List<Todo> todos = [];
 
   void fetchTdos() {
     CollectionReference collectionRef = db.collection('users');
@@ -23,8 +33,8 @@ class TodoListPageState extends State<TodoListPage> {
     docRef.get().then(
       (DocumentSnapshot doc) {
         setState(() {
-          todos = (doc.data() as Map<String, dynamic>)['todos'].cast<String>()
-              as List<String>;
+          (doc.data() as Map<String, dynamic>)['todos']
+              .forEach((e) => todos.add(Todo(e['uuid'], e['content'])));
         });
       },
       onError: (e) => print("Error getting document: $e"),
@@ -65,11 +75,11 @@ class TodoListPageState extends State<TodoListPage> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ChatPage(
-                                    title: todos[index],
+                                    todo: todos[index],
                                     currentEmail: widget.currentEmail)));
                           },
                           child: Card(
-                            child: ListTile(title: Text(todos[index])),
+                            child: ListTile(title: Text(todos[index].content)),
                           ))),
                   SizedBox(
                       width: 50,
@@ -98,12 +108,13 @@ class TodoListPageState extends State<TodoListPage> {
           );
           if (newContent != null) {
             setState(() {
-              todos.add(newContent);
+              final String newUid = const Uuid().v4();
+              todos.add(Todo(newUid, newContent));
             });
             db
                 .collection("users")
                 .doc(widget.currentUid)
-                .set({'todos': todos}).onError(
+                .set({'todos': todos.map((e) => e.toMap())}).onError(
                     (e, _) => print("Error writing document: $e"));
           }
         },
