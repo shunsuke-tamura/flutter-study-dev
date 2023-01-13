@@ -74,9 +74,10 @@ class TodoListPageState extends State<TodoListPage> {
                       child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ChatPage(
-                                    todo: todos[index],
-                                    currentEmail: widget.currentEmail)));
+                                builder: (context) => const ChatRoom(
+                                    // todo: todos[index],
+                                    // currentEmail: widget.currentEmail
+                                    )));
                           },
                           child: Card(
                             child: ListTile(title: Text(todos[index].content)),
