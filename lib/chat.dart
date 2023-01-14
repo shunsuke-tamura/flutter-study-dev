@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_study_dev/todo.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -11,7 +12,8 @@ String randomString() {
 }
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({Key? key}) : super(key: key);
+  final Todo todo;
+  const ChatRoom({super.key, required this.todo});
 
   @override
   ChatRoomState createState() => ChatRoomState();
@@ -23,6 +25,9 @@ class ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.todo.content),
+        ),
         body: Chat(
           user: _user,
           messages: _messages,
