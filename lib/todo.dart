@@ -113,7 +113,10 @@ class TodoListPageState extends State<TodoListPage> {
                                   db
                                       .collection("users")
                                       .doc(widget.currentUser.uid)
-                                      .set({'todos': todos}).onError((e, _) =>
+                                      .set({
+                                    'otherTodos': [],
+                                    'todos': todos
+                                  }).onError((e, _) =>
                                           print("Error writing document: $e"));
                                 }),
                                 icon: const Icon(Icons.delete_forever)))
@@ -157,11 +160,10 @@ class TodoListPageState extends State<TodoListPage> {
                   final String newUid = const Uuid().v4();
                   todos.add(Todo(newUid, newContent));
                 });
-                db
-                    .collection("users")
-                    .doc(widget.currentUser.uid)
-                    .set({'todos': todos.map((e) => e.toMap())}).onError(
-                        (e, _) => print("Error writing document: $e"));
+                db.collection("users").doc(widget.currentUser.uid).set({
+                  'otherTodos': [],
+                  'todos': todos.map((e) => e.toMap())
+                }).onError((e, _) => print("Error writing document: $e"));
                 db
                     .collection("chatRooms")
                     .doc(todos.last.uuid)
