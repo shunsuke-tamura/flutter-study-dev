@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -13,7 +14,8 @@ String randomString() {
 
 class ChatRoom extends StatefulWidget {
   final Todo todo;
-  const ChatRoom({super.key, required this.todo});
+  final User currentUser;
+  const ChatRoom({super.key, required this.todo, required this.currentUser});
 
   @override
   ChatRoomState createState() => ChatRoomState();
@@ -21,7 +23,15 @@ class ChatRoom extends StatefulWidget {
 
 class ChatRoomState extends State<ChatRoom> {
   final List<types.Message> _messages = [];
-  final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
+  late types.User _user;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _user = types.User(
+        id: widget.currentUser.uid, firstName: widget.currentUser.email);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -32,6 +42,7 @@ class ChatRoomState extends State<ChatRoom> {
           user: _user,
           messages: _messages,
           onSendPressed: _handleSendPressed,
+          showUserNames: true,
         ),
       );
 

@@ -1,5 +1,6 @@
 // リスト一覧画面用Widget
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_study_dev/chat.dart';
@@ -15,9 +16,9 @@ class Todo {
 
 class TodoListPage extends StatefulWidget {
   final String currentEmail;
-  final String currentUid;
+  final User currentUser;
   const TodoListPage(
-      {super.key, required this.currentEmail, required this.currentUid});
+      {super.key, required this.currentEmail, required this.currentUser});
 
   @override
   TodoListPageState createState() => TodoListPageState();
@@ -29,7 +30,7 @@ class TodoListPageState extends State<TodoListPage> {
 
   void fetchTdos() {
     CollectionReference collectionRef = db.collection('users');
-    DocumentReference docRef = collectionRef.doc(widget.currentUid);
+    DocumentReference docRef = collectionRef.doc(widget.currentUser.uid);
     docRef.get().then(
       (DocumentSnapshot doc) {
         setState(() {
@@ -76,7 +77,7 @@ class TodoListPageState extends State<TodoListPage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ChatRoom(
                                       todo: todos[index],
-                                      // currentEmail: widget.currentEmail
+                                      currentUser: widget.currentUser,
                                     )));
                           },
                           child: Card(
@@ -91,7 +92,7 @@ class TodoListPageState extends State<TodoListPage> {
                             });
                             db
                                 .collection("users")
-                                .doc(widget.currentUid)
+                                .doc(widget.currentUser.uid)
                                 .set({'todos': todos}).onError((e, _) =>
                                     print("Error writing document: $e"));
                           }),
@@ -114,7 +115,7 @@ class TodoListPageState extends State<TodoListPage> {
             });
             db
                 .collection("users")
-                .doc(widget.currentUid)
+                .doc(widget.currentUser.uid)
                 .set({'todos': todos.map((e) => e.toMap())}).onError(
                     (e, _) => print("Error writing document: $e"));
           }

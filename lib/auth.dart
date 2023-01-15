@@ -86,7 +86,7 @@ class SignUpPageState extends State<SignUpPage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => TodoListPage(
                                       currentEmail: user.email!,
-                                      currentUid: user.uid,
+                                      currentUser: user,
                                     )));
                           },
                         )),
@@ -119,7 +119,7 @@ class SignUpPageState extends State<SignUpPage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => TodoListPage(
                                       currentEmail: user.email!,
-                                      currentUid: user.uid,
+                                      currentUser: user,
                                     )));
                           },
                         )),
