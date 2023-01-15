@@ -118,6 +118,10 @@ class TodoListPageState extends State<TodoListPage> {
                 .doc(widget.currentUser.uid)
                 .set({'todos': todos.map((e) => e.toMap())}).onError(
                     (e, _) => print("Error writing document: $e"));
+            db
+                .collection("chat_rooms")
+                .doc(todos.last.uuid)
+                .set({"room_title": todos.last.content, "messages": []});
           }
         },
         child: const Icon(Icons.add),
