@@ -27,6 +27,7 @@ class TodoListPage extends StatefulWidget {
 class TodoListPageState extends State<TodoListPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<Todo> todos = [];
+  List<Todo> otherTodos = [];
 
   void fetchTdos() {
     CollectionReference collectionRef = db.collection('users');
@@ -36,6 +37,15 @@ class TodoListPageState extends State<TodoListPage> {
         setState(() {
           (doc.data() as Map<String, dynamic>)['todos']
               .forEach((e) => todos.add(Todo(e['uuid'], e['content'])));
+        });
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        setState(() {
+          (doc.data() as Map<String, dynamic>)['otherTodos']
+              .forEach((e) => otherTodos.add(Todo(e['uuid'], e['content'])));
         });
       },
       onError: (e) => print("Error getting document: $e"),
@@ -50,83 +60,117 @@ class TodoListPageState extends State<TodoListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // AppBarを表示し、タイトルも設定
-      appBar: AppBar(
-        title: const Text('リスト一覧'),
-        actions: [
-          Container(
-              width: 100,
-              height: double.infinity,
-              alignment: Alignment.center,
-              child: Text(
-                widget.currentEmail,
-                style: const TextStyle(fontSize: 15),
-              ))
-        ],
-      ),
-      body: ListView.builder(
-          itemCount: todos.length,
-          itemBuilder: (context, index) {
-            return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ChatRoom(
-                                      todo: todos[index],
-                                      currentUser: widget.currentUser,
-                                    )));
-                          },
-                          child: Card(
-                            child: ListTile(title: Text(todos[index].content)),
-                          ))),
-                  SizedBox(
-                      width: 50,
-                      child: IconButton(
-                          onPressed: (() {
-                            setState(() {
-                              todos.removeAt(index);
-                            });
-                            db
-                                .collection("users")
-                                .doc(widget.currentUser.uid)
-                                .set({'todos': todos}).onError((e, _) =>
-                                    print("Error writing document: $e"));
-                          }),
-                          icon: const Icon(Icons.delete_forever)))
-                ]);
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // "push"で新規画面に遷移
-          final String? newContent = await Navigator.of(context).push<String?>(
-            MaterialPageRoute(builder: (context) {
-              // 遷移先の画面としてリスト追加画面を指定
-              return const TodoAddPage();
-            }),
-          );
-          if (newContent != null) {
-            setState(() {
-              final String newUid = const Uuid().v4();
-              todos.add(Todo(newUid, newContent));
-            });
-            db
-                .collection("users")
-                .doc(widget.currentUser.uid)
-                .set({'todos': todos.map((e) => e.toMap())}).onError(
-                    (e, _) => print("Error writing document: $e"));
-            db
-                .collection("chatRooms")
-                .doc(todos.last.uuid)
-                .set({"title": todos.last.content, "messages": []});
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          // AppBarを表示し、タイトルも設定
+          appBar: AppBar(
+            title: const Text('リスト一覧'),
+            actions: [
+              Container(
+                  width: 100,
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.currentEmail,
+                    style: const TextStyle(fontSize: 15),
+                  ))
+            ],
+            bottom: const TabBar(
+              tabs: <Widget>[
+                Tab(text: '自分のもの'),
+                Tab(text: '他人のもの'),
+              ],
+            ),
+          ),
+          body: TabBarView(children: [
+            ListView.builder(
+                itemCount: todos.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ChatRoom(
+                                            todo: todos[index],
+                                            currentUser: widget.currentUser,
+                                          )));
+                                },
+                                child: Card(
+                                  child: ListTile(
+                                      title: Text(todos[index].content)),
+                                ))),
+                        SizedBox(
+                            width: 50,
+                            child: IconButton(
+                                onPressed: (() {
+                                  setState(() {
+                                    todos.removeAt(index);
+                                  });
+                                  db
+                                      .collection("users")
+                                      .doc(widget.currentUser.uid)
+                                      .set({'todos': todos}).onError((e, _) =>
+                                          print("Error writing document: $e"));
+                                }),
+                                icon: const Icon(Icons.delete_forever)))
+                      ]);
+                }),
+            ListView.builder(
+                itemCount: otherTodos.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ChatRoom(
+                                            todo: otherTodos[index],
+                                            currentUser: widget.currentUser,
+                                          )));
+                                },
+                                child: Card(
+                                  child: ListTile(
+                                      title: Text(otherTodos[index].content)),
+                                ))),
+                        const SizedBox(width: 50, child: Text('hoge'))
+                      ]);
+                }),
+          ]),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              // "push"で新規画面に遷移
+              final String? newContent =
+                  await Navigator.of(context).push<String?>(
+                MaterialPageRoute(builder: (context) {
+                  // 遷移先の画面としてリスト追加画面を指定
+                  return const TodoAddPage();
+                }),
+              );
+              if (newContent != null) {
+                setState(() {
+                  final String newUid = const Uuid().v4();
+                  todos.add(Todo(newUid, newContent));
+                });
+                db
+                    .collection("users")
+                    .doc(widget.currentUser.uid)
+                    .set({'todos': todos.map((e) => e.toMap())}).onError(
+                        (e, _) => print("Error writing document: $e"));
+                db
+                    .collection("chatRooms")
+                    .doc(todos.last.uuid)
+                    .set({"title": todos.last.content, "messages": []});
+              }
+            },
+            child: const Icon(Icons.add),
+          ),
+        ));
   }
 }
 
