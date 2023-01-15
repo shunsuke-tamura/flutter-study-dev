@@ -24,29 +24,8 @@ class ChatRoom extends StatefulWidget {
 
 class ChatRoomState extends State<ChatRoom> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
-  final List<types.Message> _messages = [];
+  List<types.Message> _messages = [];
   late types.User _user;
-
-  void fetchMessages() {
-    CollectionReference collectionRef = db.collection('chatRooms');
-    DocumentReference docRef = collectionRef.doc(widget.todo.uuid);
-    docRef.get().then(
-      (DocumentSnapshot doc) {
-        setState(() {
-          (doc.data() as Map<String, dynamic>)['messages']
-              .forEach((e) => _messages.add(types.TextMessage(
-                    author: types.User(
-                        id: e['author']['id'],
-                        firstName: e['author']['firstName']),
-                    createdAt: e['createdAt'],
-                    id: e['id'],
-                    text: e['text'],
-                  )));
-        });
-      },
-      onError: (e) => print("Error getting document: $e"),
-    );
-  }
 
   @override
   void initState() {
@@ -54,7 +33,6 @@ class ChatRoomState extends State<ChatRoom> {
 
     _user = types.User(
         id: widget.currentUser.uid, firstName: widget.currentUser.email);
-    fetchMessages();
   }
 
   @override
@@ -62,11 +40,19 @@ class ChatRoomState extends State<ChatRoom> {
         appBar: AppBar(
           title: Text(widget.todo.content),
         ),
-        body: Chat(
-          user: _user,
-          messages: _messages,
-          onSendPressed: _handleSendPressed,
-          showUserNames: true,
+        body: StreamBuilder<DocumentSnapshot>(
+          stream: db.collection('chatRooms').doc(widget.todo.uuid).snapshots(),
+          builder: (context, snapshot) {
+            _messages = [];
+            (snapshot.data!.data() as Map<String, dynamic>)['messages']
+                .forEach((e) => _messages.add(types.Message.fromJson(e)));
+            return Chat(
+              user: _user,
+              messages: _messages,
+              onSendPressed: _handleSendPressed,
+              showUserNames: true,
+            );
+          },
         ),
       );
 
