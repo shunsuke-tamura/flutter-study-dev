@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_study_dev/todo.dart';
+import 'package:flutter_study_dev/user_list.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -39,6 +40,20 @@ class ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(widget.todo.content),
+          actions: [
+            Container(
+                width: 100,
+                height: double.infinity,
+                alignment: Alignment.center,
+                child: TextButton(
+                  child: const Text('招待',
+                      style: TextStyle(fontSize: 15, color: Colors.white)),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const UserListPage()));
+                  },
+                ))
+          ],
         ),
         body: StreamBuilder<DocumentSnapshot>(
           stream: db.collection('chatRooms').doc(widget.todo.uuid).snapshots(),
