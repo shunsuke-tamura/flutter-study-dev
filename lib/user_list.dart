@@ -8,7 +8,8 @@ class UserOnDb {
 }
 
 class UserListPage extends StatefulWidget {
-  const UserListPage({super.key});
+  final String currentEmail;
+  const UserListPage({super.key, required this.currentEmail});
 
   @override
   UserListPageState createState() => UserListPageState();
@@ -24,9 +25,9 @@ class UserListPageState extends State<UserListPage> {
       (QuerySnapshot snapshot) {
         for (QueryDocumentSnapshot doc in snapshot.docs) {
           setState(() {
-            _users.add(UserOnDb((doc.data() as Map<String, dynamic>)['email']));
+            String email = (doc.data() as Map<String, dynamic>)['email'];
+            if (email != widget.currentEmail) _users.add(UserOnDb(email));
           });
-          print(_users);
         }
       },
       onError: (e) => print("Error getting document: $e"),

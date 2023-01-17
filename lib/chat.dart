@@ -50,7 +50,9 @@ class ChatRoomState extends State<ChatRoom> {
                       style: TextStyle(fontSize: 15, color: Colors.white)),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const UserListPage()));
+                        builder: (context) => UserListPage(
+                              currentEmail: widget.currentUser.email!,
+                            )));
                   },
                 ))
           ],
