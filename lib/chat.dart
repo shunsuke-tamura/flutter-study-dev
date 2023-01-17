@@ -52,6 +52,7 @@ class ChatRoomState extends State<ChatRoom> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => UserListPage(
                               currentEmail: widget.currentUser.email!,
+                              selectedTodo: widget.todo,
                             )));
                   },
                 ))
