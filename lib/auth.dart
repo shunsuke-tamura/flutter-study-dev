@@ -79,10 +79,11 @@ class SignUpPageState extends State<SignUpPage> {
                               return;
                             }
                             if (!mounted) return;
-                            db
-                                .collection("users")
-                                .doc(user.uid)
-                                .set({"todos": []});
+                            db.collection("users").doc(user.uid).set({
+                              'email': user.email,
+                              'otherTodos': [],
+                              "todos": []
+                            });
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => TodoListPage(
                                       currentEmail: user.email!,
