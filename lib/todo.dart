@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_study_dev/user_list.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_study_dev/chat.dart';
 
@@ -164,10 +165,13 @@ class TodoListPageState extends State<TodoListPage> {
                   'otherTodos': [],
                   'todos': todos.map((e) => e.toMap())
                 }).onError((e, _) => print("Error writing document: $e"));
-                db
-                    .collection("chatRooms")
-                    .doc(todos.last.uuid)
-                    .set({"title": todos.last.content, "messages": []});
+                db.collection("chatRooms").doc(todos.last.uuid).set({
+                  "title": todos.last.content,
+                  "messages": [],
+                  "members": [
+                    UserOnDb(widget.currentUser.email!, widget.currentUser.uid)
+                  ]
+                });
               }
             },
             child: const Icon(Icons.add),
