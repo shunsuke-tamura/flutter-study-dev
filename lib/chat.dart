@@ -79,9 +79,9 @@ class ChatRoomState extends State<ChatRoom> {
       _messages.insert(0, message);
     });
     db.collection("chatRooms").doc(widget.todo.uuid).set({
-      'title': widget.todo.content,
       'messages': _messages.map((e) => e.toJson())
-    }).onError((e, _) => print("Error writing document: $e"));
+    }, SetOptions(merge: true)).onError(
+        (e, _) => print("Error writing document: $e"));
   }
 
   void _handleSendPressed(types.PartialText message) {
