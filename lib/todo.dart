@@ -169,6 +169,7 @@ class TodoListPageState extends State<TodoListPage> {
                   "messages": [],
                   "members": [
                     UserOnDb(widget.currentUser.email!, widget.currentUser.uid)
+                        .toMap()
                   ]
                 });
               }

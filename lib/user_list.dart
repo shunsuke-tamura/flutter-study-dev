@@ -6,6 +6,10 @@ import 'package:flutter_study_dev/todo.dart';
 class UserOnDb {
   final String email, uid;
   UserOnDb(this.email, this.uid);
+
+  Map<String, String> toMap() {
+    return {'email': email, 'uid': uid};
+  }
 }
 
 class UserListPage extends StatefulWidget {
