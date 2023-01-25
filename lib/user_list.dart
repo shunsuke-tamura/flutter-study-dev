@@ -42,21 +42,43 @@ class UserListPageState extends State<UserListPage> {
     return otherTodos;
   }
 
-  void fetchUsers() {
-    CollectionReference collectionRef = db.collection('users');
-    collectionRef.get().then(
-      (QuerySnapshot snapshot) {
-        for (QueryDocumentSnapshot doc in snapshot.docs) {
-          setState(() {
-            String email = (doc.data() as Map<String, dynamic>)['email'];
-            if (email != widget.currentEmail) {
-              _users.add(UserOnDb(email, doc.id));
-            }
-          });
-        }
+  Future<List<UserOnDb>> fetchMembers() async {
+    List<UserOnDb> members = [];
+    CollectionReference collectionRef = db.collection('chatRooms');
+    DocumentReference docRef = collectionRef.doc(widget.selectedTodo.uuid);
+    await docRef.get().then(
+      (DocumentSnapshot doc) {
+        setState(() {
+          (doc.data() as Map<String, dynamic>)['members']
+              .forEach((e) => members.add(UserOnDb(e['email'], e['uid'])));
+        });
       },
       onError: (e) => print("Error getting document: $e"),
     );
+    return members;
+  }
+
+  void fetchUsers() async {
+    List<UserOnDb?> currentMembers = await fetchMembers();
+    CollectionReference collectionRef = db.collection('users');
+    QuerySnapshot<Object?> snapshot = await collectionRef.get();
+    List<QueryDocumentSnapshot<Object?>> docs = snapshot.docs;
+    bool isExist = false;
+    for (var doc in docs) {
+      var a = 0;
+      for (var e in currentMembers) {
+        if (e?.uid == doc.id) {
+          isExist = true;
+          break;
+        }
+      }
+      if (!isExist) {
+        String email = (doc.data() as Map<String, dynamic>)['email'];
+        setState(() {
+          _users.add(UserOnDb(email, doc.id));
+        });
+      }
+    }
   }
 
   @override
