@@ -63,9 +63,8 @@ class UserListPageState extends State<UserListPage> {
     CollectionReference collectionRef = db.collection('users');
     QuerySnapshot<Object?> snapshot = await collectionRef.get();
     List<QueryDocumentSnapshot<Object?>> docs = snapshot.docs;
-    bool isExist = false;
     for (var doc in docs) {
-      var a = 0;
+      bool isExist = false;
       for (var e in currentMembers) {
         if (e?.uid == doc.id) {
           isExist = true;
@@ -114,6 +113,18 @@ class UserListPageState extends State<UserListPage> {
                                   'otherTodos': [
                                     ...currentOtherTodos.map((e) => e.toMap()),
                                     widget.selectedTodo.toMap()
+                                  ],
+                                }, SetOptions(merge: true)).onError((e, _) =>
+                                        print("Error writing document: $e"));
+                                List<UserOnDb> currentMembers =
+                                    await fetchMembers();
+                                await db
+                                    .collection("chatRooms")
+                                    .doc(widget.selectedTodo.uuid)
+                                    .set({
+                                  'members': [
+                                    ...currentMembers.map((e) => e.toMap()),
+                                    _users[index].toMap()
                                   ],
                                 }, SetOptions(merge: true)).onError((e, _) =>
                                         print("Error writing document: $e"));
