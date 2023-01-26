@@ -8,10 +8,11 @@ import 'package:flutter_study_dev/chat.dart';
 
 class Todo {
   final String uuid, content;
-  Todo(this.uuid, this.content);
+  final UserOnDb author;
+  Todo(this.uuid, this.content, this.author);
 
-  Map<String, String> toMap() {
-    return {'uuid': uuid, 'content': content};
+  Map<String, dynamic> toMap() {
+    return {'uuid': uuid, 'content': content, 'author': author.toMap()};
   }
 }
 
@@ -36,8 +37,9 @@ class TodoListPageState extends State<TodoListPage> {
     docRef.get().then(
       (DocumentSnapshot doc) {
         setState(() {
-          (doc.data() as Map<String, dynamic>)['todos']
-              .forEach((e) => todos.add(Todo(e['uuid'], e['content'])));
+          (doc.data() as Map<String, dynamic>)['todos'].forEach((e) =>
+              todos.add(Todo(e['uuid'], e['content'],
+                  UserOnDb(e['author']['email'], e['author']['uid']))));
         });
       },
       onError: (e) => print("Error getting document: $e"),
@@ -45,8 +47,9 @@ class TodoListPageState extends State<TodoListPage> {
     docRef.get().then(
       (DocumentSnapshot doc) {
         setState(() {
-          (doc.data() as Map<String, dynamic>)['otherTodos']
-              .forEach((e) => otherTodos.add(Todo(e['uuid'], e['content'])));
+          (doc.data() as Map<String, dynamic>)['otherTodos'].forEach((e) =>
+              otherTodos.add(Todo(e['uuid'], e['content'],
+                  UserOnDb(e['author']['email'], e['author']['uid']))));
         });
       },
       onError: (e) => print("Error getting document: $e"),
@@ -141,7 +144,9 @@ class TodoListPageState extends State<TodoListPage> {
                                   child: ListTile(
                                       title: Text(otherTodos[index].content)),
                                 ))),
-                        const SizedBox(width: 50, child: Text('hoge'))
+                        SizedBox(
+                            width: 150,
+                            child: Text(otherTodos[index].author.email))
                       ]);
                 }),
           ]),
@@ -158,7 +163,11 @@ class TodoListPageState extends State<TodoListPage> {
               if (newContent != null) {
                 setState(() {
                   final String newUid = const Uuid().v4();
-                  todos.add(Todo(newUid, newContent));
+                  todos.add(Todo(
+                      newUid,
+                      newContent,
+                      UserOnDb(
+                          widget.currentUser.email!, widget.currentUser.uid)));
                 });
                 db.collection("users").doc(widget.currentUser.uid).set({
                   'todos': todos.map((e) => e.toMap())

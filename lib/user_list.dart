@@ -33,8 +33,9 @@ class UserListPageState extends State<UserListPage> {
     await docRef.get().then(
       (DocumentSnapshot doc) {
         setState(() {
-          (doc.data() as Map<String, dynamic>)['otherTodos']
-              .forEach((e) => otherTodos.add(Todo(e['uuid'], e['content'])));
+          (doc.data() as Map<String, dynamic>)['otherTodos'].forEach((e) =>
+              otherTodos.add(Todo(e['uuid'], e['content'],
+                  UserOnDb(e['author']['email'], e['author']['uid']))));
         });
       },
       onError: (e) => print("Error getting document: $e"),
